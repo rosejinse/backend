@@ -17,7 +17,6 @@ int main()
 
 
     int numBytes = 0;
-    char buf2[65536];
     struct sockaddr_in sin;
     socklen_t sin_size = sizeof(sin);
 
