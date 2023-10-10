@@ -27,16 +27,11 @@ int main()
     phone->set_number("02-100-1000");
     phone->set_type(Person::HOME);
     
-    const string s = p->SerializeAsString();
-    cout << "Length:" << s.length() << endl;
-    cout << s << endl;
-
+    const string buf = p->SerializeAsString();
 
     int sk = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sk < 0)
         return 1;
-
-    string buf = s;
 
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
@@ -46,22 +41,21 @@ int main()
 
     int numBytes = sendto(sk, buf.c_str(), buf.length(),
                           0, (struct sockaddr *)&sin, sizeof(sin));
-    cout << "Sent: " << numBytes << endl;
-    cout << "Sent: " << buf << endl;
 
     char buf2[65536];
+    memset(&sin, 0, sizeof(sin));
     socklen_t sin_size = sizeof(sin);   // 보낸 사람 주소 담을 변수 크기
     numBytes = recvfrom(sk, buf2, sizeof(buf2), 0,
                         (struct sockaddr *)&sin, &sin_size);
-    cout << "Recevied: " << numBytes << endl;
-    cout << "Recevied: " << buf2 << endl;
-    cout << "From " << inet_ntoa(sin.sin_addr) << endl; // inet_ntoa: inet network to askii
+
+    buf2[numBytes]='\0';
+    close(sk);
 
 
-
-
+    string s2(buf2);
     Person *p2 = new Person;
-    p2->ParseFromString(buf2);
+    string received_data(buf2, numBytes);
+    p2->ParseFromString(received_data);
     cout << "Name:" << p2->name() << endl;
     cout << "ID:" << p2->id() << endl;
     for(int i = 0; i < p2->phones_size(); ++i) {
@@ -69,8 +63,4 @@ int main()
         cout << "Phone:" << p2->phones(i).number() << endl;
     }
 
-    ofstream f("mybinary", ios_base::out | ios_base::binary);
-    f << s;
-
-    close(sk);
 }
