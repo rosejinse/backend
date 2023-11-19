@@ -62,5 +62,4 @@ int main()
         cout << "Type:" << p2->phones(i).type()  << endl;
         cout << "Phone:" << p2->phones(i).number() << endl;
     }
-
 }

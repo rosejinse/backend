@@ -25,8 +25,8 @@ int main()
 
     int numBytes = sendto(s, buf.c_str(), buf.length(),
                           0, (struct sockaddr *)&sin, sizeof(sin));
-    cout << "Sent: " << numBytes << endl;
-    cout << "Sent: " << buf << endl;
+    cout << "Sent: " << numBytes << endl;   // Sent: 5
+    cout << "Sent: " << buf << endl;        // Sent: test4
 
     char buf2[65536];
     socklen_t sin_size = sizeof(sin);   // 보낸 사람 주소 담을 변수 크기
